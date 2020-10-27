@@ -12,7 +12,7 @@ In `tokens.json` file you need to set correct URL and port of KosAPI service ins
 
 ### Usage in Camunda process
 
-Add a script task with javascript:
+Add a script task with javascript (either inline or external):
 
 ```
  * Load Secrets Json File and returns a specific password
