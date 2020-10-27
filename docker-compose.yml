@@ -1,0 +1,16 @@
+version: '3.1'
+
+services:
+  camunda:
+    build: .
+    environment:
+      JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
+      MY_PASSWORD_FILE: /run/secrets/tokens
+    secrets:
+      - tokens
+    ports:
+      - "8055:8080"
+
+secrets:
+  tokens:
+    file: tokens.json

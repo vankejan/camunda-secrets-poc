@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1eey2ty" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.1.1">
+  <bpmn:process id="Process_04qf7rd" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1qiu6x9</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="fetch-theses" name="Fetch theses for user" scriptFormat="javascript">
+      <bpmn:extensionElements>
+        <camunda:executionListener event="start">
+          <camunda:script scriptFormat="javascript">/**
+ * Load Passwords Json File and returns a specific password
+ *
+ * @param string passwordKey The json property key that the password is stored. Currently only single level json is supported.
+ * @param string passwordEnvName The Env Variable name that the JSON is stored in using Docker Secrets
+ * @return string The password. Assumes that all passwords are strings and therefore returns a string.
+ */
+function getPassword(passwordKey, passwordEnvName)
+{
+  with (new JavaImporter(java.lang.System, java.nio.file))
+  {
+    var passwordPath = System.getenv(passwordEnvName)
+    var passwordFileBytes = Files.readAllBytes(Paths.get(passwordPath))
+  }
+
+  var String = Java.type('java.lang.String')
+  var passwordFileString = new String(passwordFileBytes)
+
+  var passwordJson = JSON.parse(passwordFileString)
+  var password = passwordJson[passwordKey]
+
+  return password.toString()
+}
+
+var token = getPassword('token', 'tokens')</camunda:script>
+        </camunda:executionListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1qiu6x9</bpmn:incoming>
+      <bpmn:outgoing>Flow_0xdbmlc</bpmn:outgoing>
+      <bpmn:script>/**
+ * Load Passwords Json File and returns a specific password
+ *
+ * @param string passwordKey The json property key that the password is stored. Currently only single level json is supported.
+ * @param string passwordEnvName The Env Variable name that the JSON is stored in using Docker Secrets
+ * @return string The password. Assumes that all passwords are strings and therefore returns a string.
+ */
+function getPassword(passwordKey, passwordEnvName)
+{
+  with (new JavaImporter(java.lang.System, java.nio.file))
+  {
+    var passwordPath = System.getenv(passwordEnvName)
+    var passwordFileBytes = Files.readAllBytes(Paths.get(passwordPath))
+  }
+
+  var String = Java.type('java.lang.String')
+  var passwordFileString = new String(passwordFileBytes)
+
+  var passwordJson = JSON.parse(passwordFileString)
+  var password = passwordJson[passwordKey]
+
+  return password.toString()
+}
+
+var token = getPassword('token', 'MY_PASSWORD_FILE')
+
+with (new JavaImporter(org.jsoup))
+{
+
+  var doc =  Jsoup.connect('http://172.27.96.1:8888/students/vankejan/theses/?token=' + token)
+                  .ignoreContentType(true)
+                  .method(Java.type('org.jsoup.Connection.Method').GET)
+                  .timeout(30000)
+                  .execute()
+
+  var resBody = doc.body()
+}
+
+function spinify(body)
+{
+  var parsed = JSON.parse(body)
+  var stringified = JSON.stringify(parsed)
+  var spin = S(stringified)
+  return spin
+}
+
+execution.setVariable('responseBodyString', spinify(resBody))</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_1qiu6x9" sourceRef="StartEvent_1" targetRef="fetch-theses" />
+    <bpmn:endEvent id="Event_0vyx6j9">
+      <bpmn:incoming>Flow_09ryucf</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0xdbmlc" sourceRef="fetch-theses" targetRef="stop-user" />
+    <bpmn:task id="stop-user" name="stop user task">
+      <bpmn:incoming>Flow_0xdbmlc</bpmn:incoming>
+      <bpmn:outgoing>Flow_09ryucf</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_09ryucf" sourceRef="stop-user" targetRef="Event_0vyx6j9" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_04qf7rd">
+      <bpmndi:BPMNEdge id="Flow_1qiu6x9_di" bpmnElement="Flow_1qiu6x9">
+        <di:waypoint x="215" y="97" />
+        <di:waypoint x="430" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0xdbmlc_di" bpmnElement="Flow_0xdbmlc">
+        <di:waypoint x="530" y="97" />
+        <di:waypoint x="610" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_09ryucf_di" bpmnElement="Flow_09ryucf">
+        <di:waypoint x="710" y="97" />
+        <di:waypoint x="862" y="97" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0tdqtui_di" bpmnElement="fetch-theses">
+        <dc:Bounds x="430" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0vyx6j9_di" bpmnElement="Event_0vyx6j9">
+        <dc:Bounds x="862" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0eis8p7_di" bpmnElement="stop-user">
+        <dc:Bounds x="610" y="57" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
