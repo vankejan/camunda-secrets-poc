@@ -1,16 +1,31 @@
 version: '3.1'
 
 services:
+  kosapi:
+    restart: always
+    image: registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service/kosapi:latest
+    ports:
+      - "8888:8888"
+    expose:
+      - "8888"
   camunda:
     build: .
+    container_name: camunda
     environment:
       JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
       MY_PASSWORD_FILE: /run/secrets/tokens
     secrets:
       - tokens
+    networks:
+      - camunda-network
     ports:
-      - "8055:8080"
+      - "8080:8080"
+    depends_on:
+      - kosapi
 
+networks:
+    camunda-network:
+        driver: bridge
 secrets:
   tokens:
     file: tokens.json

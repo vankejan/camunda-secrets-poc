@@ -61,12 +61,12 @@ execution.setVariable('responseBodyString', spinify(resBody))</bpmn:script>
       <bpmn:incoming>Flow_09ryucf</bpmn:incoming>
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0xdbmlc" sourceRef="fetch-theses" targetRef="stop-user" />
-    <bpmn:task id="stop-user" name="stop user task">
+    <bpmn:sequenceFlow id="Flow_09ryucf" sourceRef="stop-user" targetRef="Event_0vyx6j9" />
+    <bpmn:userTask id="stop-user" name="stop user task">
       <bpmn:documentation>This is for debugging purpose only.</bpmn:documentation>
       <bpmn:incoming>Flow_0xdbmlc</bpmn:incoming>
       <bpmn:outgoing>Flow_09ryucf</bpmn:outgoing>
-    </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_09ryucf" sourceRef="stop-user" targetRef="Event_0vyx6j9" />
+    </bpmn:userTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="theses-poc">
@@ -85,13 +85,13 @@ execution.setVariable('responseBodyString', spinify(resBody))</bpmn:script>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="79" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0vyx6j9_di" bpmnElement="Event_0vyx6j9">
-        <dc:Bounds x="862" y="79" width="36" height="36" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0tdqtui_di" bpmnElement="fetch-theses">
         <dc:Bounds x="380" y="57" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0eis8p7_di" bpmnElement="stop-user">
+      <bpmndi:BPMNShape id="Event_0vyx6j9_di" bpmnElement="Event_0vyx6j9">
+        <dc:Bounds x="862" y="79" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0blrdtd_di" bpmnElement="stop-user">
         <dc:Bounds x="600" y="57" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
