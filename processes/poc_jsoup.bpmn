@@ -31,8 +31,8 @@ function getSecret(key, secretsEnv) // if needed, this function can contain OAut
   return secret.toString()
 }
 
-var token = getSecret('token', 'MY_PASSWORD_FILE') // get token
-var url = getSecret('url', 'MY_PASSWORD_FILE') // get url
+var token = getSecret('token', 'CAMUNDA_TOKENS_FILE') // get token
+var url = getSecret('url', 'CAMUNDA_TOKENS_FILE') // get url
 
 with (new JavaImporter(org.jsoup))
 {

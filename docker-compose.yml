@@ -13,9 +13,9 @@ services:
     container_name: camunda
     environment:
       JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
-      MY_PASSWORD_FILE: /run/secrets/tokens
+      CAMUNDA_TOKENS_FILE: /run/secrets/camunda-tokens
     secrets:
-      - tokens
+      - camunda-tokens
     networks:
       - camunda-network
     ports:
@@ -27,5 +27,5 @@ networks:
     camunda-network:
         driver: bridge
 secrets:
-  tokens:
-    file: tokens.json
+  camunda-tokens:
+    file: camunda-tokens.json
