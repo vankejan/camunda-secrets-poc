@@ -17,7 +17,7 @@ In `tokens.json` file you need to set correct URL and port of KosAPI service ins
 Add a script task with javascript (either inline or external):
 
 ```
- * Load Secrets Json File and returns a specific password
+ * Load Passwords Json File and returns a specific password
  *
  * @param string key The json property key that the password is stored. Currently only single level json is supported.
  * @param string secretsEnv The Env Variable name that the JSON is stored in using Docker Secrets
@@ -40,8 +40,8 @@ function getSecret(key, secretsEnv) // if needed, this function can contain OAut
   return secret.toString()
 }
 
-var token = getSecret('token', 'MY_PASSWORD_FILE') // get token
-var url = getSecret('url', 'MY_PASSWORD_FILE') // get url
+var token = getSecret('token', 'CAMUNDA_TOKENS_FILE') // get token
+var url = getSecret('url', 'CAMUNDA_TOKENS_FILE') // get url
 
 with (new JavaImporter(org.jsoup))
 {
