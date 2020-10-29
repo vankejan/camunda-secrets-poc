@@ -4,7 +4,9 @@ Example taken from [this repository](https://github.com/DigitalState/camunda-var
 
 Adjusted to be used with KosAPI service.
 
-The `process` folder contains Camunda process example usage.
+The `processes` folder contains Camunda process example usage.
+
+Also there is a [Dockerfile](https://github.com/vankejan/camunda-secrets-poc/blob/main/Dockerfile) for Camunda.
 
 To run this, you to authenticate docker against `registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service` then run `docker-compose up -d`
 
