@@ -6,7 +6,7 @@ Adjusted to be used with KosAPI service.
 
 The `process` folder contains Camunda process example usage.
 
-To run this, you need KosAPI service running localy, and docker installed, then run `docker-compose up -d`
+To run this, you to authenticate docker against `registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service` then run `docker-compose up -d`
 
 In `tokens.json` file you need to set correct URL and port of KosAPI service instance. 
 
