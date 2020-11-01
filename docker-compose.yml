@@ -6,7 +6,7 @@ services:
     restart: always
     image: registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service/kosapi:latest
     networks:
-      - camunda-be-network
+      - camunda-services-network
     expose:
       # services only need to be visible to camunda and other camunda services
       - "8888"
@@ -22,7 +22,7 @@ services:
     links: # link to services
       - "kosapi-service:kosapi"
     networks:
-      - camunda-be-network
+      - camunda-services-network
     ports: # camunda's 8080 port should be exposed to the host
       - "8080:8080"
     depends_on:
@@ -30,8 +30,8 @@ services:
 
 networks:
     # use this network for camunda-to-services connection
-    camunda-be-network:
-        name: camunda-be-network
+    camunda-services-network:
+        name: camunda-services-network
         driver: bridge
 secrets:
   camunda-tokens:
