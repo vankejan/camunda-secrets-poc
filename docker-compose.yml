@@ -1,30 +1,37 @@
 version: '3.1'
 
 services:
-  kosapi:
+  kosapi-service:
+    container_name: kosapi-service
     restart: always
     image: registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service/kosapi:latest
-    ports:
-      - "8888:8888"
+    networks:
+      - camunda-be-network
     expose:
+      # services only need to be visible to camunda and other camunda services
       - "8888"
   camunda:
     build: .
     container_name: camunda
+    restart: always
     environment:
       JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
       CAMUNDA_TOKENS_FILE: /run/secrets/camunda-tokens
     secrets:
       - camunda-tokens
+    links: # link to services
+      - "kosapi-service:kosapi"
     networks:
-      - camunda-network
-    ports:
+      - camunda-be-network
+    ports: # camunda's 8080 port should be exposed to the host
       - "8080:8080"
     depends_on:
-      - kosapi
+      - "kosapi-service"
 
 networks:
-    camunda-network:
+    # use this network for camunda-to-services connection
+    camunda-be-network:
+        name: camunda-be-network
         driver: bridge
 secrets:
   camunda-tokens:
