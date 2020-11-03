@@ -5,6 +5,10 @@ services:
     container_name: kosapi-service
     restart: always
     image: registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service/kosapi:latest
+    environment:
+      KOSAPI_SECRETS_FILE: /run/secrets/kosapi-secrets
+    secrets:
+      - kosapi-secrets
     networks:
       - camunda-services-network
     expose:
@@ -26,7 +30,7 @@ services:
     ports: # camunda's 8080 port should be exposed to the host
       - "8080:8080"
     depends_on:
-      - "kosapi-service"
+      - kosapi-service
 
 networks:
     # use this network for camunda-to-services connection
@@ -36,3 +40,5 @@ networks:
 secrets:
   camunda-tokens:
     file: camunda-tokens.json
+  kosapi-secrets:
+    file: kosapi-secrets.json
