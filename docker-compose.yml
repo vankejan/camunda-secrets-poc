@@ -3,7 +3,7 @@ version: '3.1'
 services:
   kosapi-service:
     container_name: kosapi-service
-    restart: always
+    #restart: always
     image: registry.gitlab.fel.cvut.cz/czm/camunda/camunda_services/kosapi-service/kosapi:latest
     environment:
       KOSAPI_SECRETS_FILE: /run/secrets/kosapi-secrets
@@ -17,24 +17,58 @@ services:
   camunda:
     build: .
     container_name: camunda
-    restart: always
+    #restart: always
     environment:
       JAVA_OPTS: -Djava.security.egd=file:/dev/./urandom
       CAMUNDA_TOKENS_FILE: /run/secrets/camunda-tokens
+      DB_DRIVER: org.postgresql.Driver
+      DB_URL: jdbc:postgresql://db:5432/camunda
+      DB_USERNAME: postgres
+      DB_PASSWORD_FILE: /run/secrets/db-root-password
+      WAIT_FOR: db:5432
     secrets:
       - camunda-tokens
-    links: # link to services
+    links: # link to services and db
       - "kosapi-service:kosapi"
+      - "postgres:db"
     networks:
       - camunda-services-network
+      - camunda-database-network
     ports: # camunda's 8080 port should be exposed to the host
       - "8080:8080"
+    secrets:
+      - db-root-password  
+      - camunda-tokens
     depends_on:
       - kosapi-service
+      - postgres
+  postgres:
+    container_name: camunda-db
+    #restart: always
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db-root-password
+      POSTGRES_USER_FILE:  /run/secrets/db-root-user
+      POSTGRES_DB_FILE:  /run/secrets/db-name
+    image: "postgres:12.4-alpine"
+    volumes: # mount as volumes, so the data survives if the container dies, also mount configuration
+      - "./postgres/postgres.conf:/usr/local/share/postgresql/postgresql.conf"
+      - "./postgres/data:/var/lib/postgresql/data:delegated"
+    command: "postgres -c config_file=/usr/local/share/postgresql/postgresql.conf"
+    networks:
+      - camunda-database-network
+    ports: # postgres's 5432 port should be exposed to the host
+      - "5444:5432"
+    secrets:
+      - db-root-password
+      - db-root-user
+      - db-name
 
 networks:
     # use this network for camunda-to-services connection
     camunda-services-network:
+        name: camunda-services-network
+        driver: bridge
+    camunda-database-network:
         name: camunda-services-network
         driver: bridge
 secrets:
@@ -42,3 +76,9 @@ secrets:
     file: camunda-tokens.json
   kosapi-secrets:
     file: kosapi-secrets.json
+  db-root-password:
+    file: db-root-password.txt
+  db-root-user:
+    file: db-root-user.txt
+  db-name:
+    file: db-name.txt
