@@ -2,6 +2,8 @@
 
 Example taken from [this repository](https://github.com/DigitalState/camunda-variations/tree/master/docker-secrets).
 
+To use this example without Docker Swarm just enable Buildkit.
+
 Adjusted to be used with KosAPI service.
 
 The `processes` folder contains Camunda process example usage.
