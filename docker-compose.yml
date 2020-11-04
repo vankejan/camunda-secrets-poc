@@ -73,12 +73,12 @@ networks:
         driver: bridge
 secrets:
   camunda-tokens:
-    file: camunda-tokens.json
+    file: secrets/camunda-tokens.json
   kosapi-secrets:
-    file: kosapi-secrets.json
+    file: secrets/kosapi-secrets.json
   db-root-password:
-    file: db-root-password.txt
+    file: secrets/db-root-password.txt
   db-root-user:
-    file: db-root-user.txt
+    file: secrets/db-root-user.txt
   db-name:
-    file: db-name.txt
+    file: secrets/db-name.txt
