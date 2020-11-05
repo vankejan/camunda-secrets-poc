@@ -28,6 +28,9 @@ services:
       WAIT_FOR: db:5432
     secrets:
       - camunda-tokens
+    volumes: # mount configuration as volume
+      - "./camunda/conf/bpm-platform.xml:/camunda/conf/bpm-platform.xml"
+      - "./camunda/webapps/engine-rest/WEB-INF/web.xml:/camunda/webapps/engine-rest/WEB-INF/web.xml"
     links: # link to services and db
       - "kosapi-service:kosapi"
       - "postgres:db"
@@ -68,6 +71,7 @@ networks:
     camunda-services-network:
         name: camunda-services-network
         driver: bridge
+    # use this network for camunda-to-postgresdb connection
     camunda-database-network:
         name: camunda-services-network
         driver: bridge
